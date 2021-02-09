@@ -33,6 +33,7 @@ from pathlib import Path
 from tierpsytools.hydra.compile_metadata import populate_96WPs,\
     convert_bad_wells_lut, get_day_metadata, day_metadata_check,\
     concatenate_days_metadata, number_wells_per_plate
+from tierpsytools.hydra import match_wells_annotations
 import re
 
 date_regex = r"\d{8}"
@@ -41,7 +42,7 @@ ROOT_DIR = Path('/Volumes/behavgenom$/Ida/Data/Hydra/PrestwickScreen')
 AUX_DIR = ROOT_DIR / 'AuxiliaryFiles'
 
 # import the shuffled plates as a reference
-SOURCEPLATES = list(AUX_DIR.rglob('*sourceplates_shuffled_FINAL.csv'))[0]
+SOURCEPLATES = list(AUX_DIR.rglob('*sourceplates_shuffled_FINAL_new.csv'))[0]
 
 drug_plates = pd.read_csv(SOURCEPLATES)
 
@@ -122,3 +123,13 @@ if __name__=='__main__':
                                               list_days=None,
                                               saveto=None)
     
+    #%% add in wells annotations
+    
+    wells_annotations_df = match_wells_annotations.import_wells_annoations_in_folder(AUX_DIR)
+
+    matched_videos_annoations = match_wells_annotations.match_rawvids_annotations(ROOT_DIR / 'RawVideos',
+                                                          wells_annotations_df)
+    
+    wells_annotated_metadata = match_wells_annotations.update_metadata(AUX_DIR,
+                                               matched_videos_annoations,
+                                               del_if_exists=True)

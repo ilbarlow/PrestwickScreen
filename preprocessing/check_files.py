@@ -63,6 +63,9 @@ if __name__ == '__main__':
                  )
     
     missing_files_hd = hd_df[hd_df.all(axis=1)]
+    
+    missing_files_hd.loc[:,'bluelight'] = missing_files_hd['masked_vid'].apply(lambda x: str(x).split('_')[-3])
+    missing_files_hd = missing_files_hd[ missing_files_hd['bluelight'] == 'prestim']
     missing_files_hd.to_csv(HD_DIR / 'AuxiliaryFiles' /\
                          '{}_missing_files.csv'.format(
                              datetime.datetime.today().strftime('%Y%m%d')),
