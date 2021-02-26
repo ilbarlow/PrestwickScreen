@@ -37,17 +37,17 @@ if __name__ == '__main__':
     
     to_export = to_export.loc[prestim_only,:]
 
-    # to_export[['drug_type',
-    #            'imaging_plate_drug_concentration',
-    #            'well_name',
-    #            'imgstore_name',
-    #            'date_yyyymmdd', ]].to_csv(METADATA_FNAME.parent / 'control_drugs_visual_checks.csv',
-    #                                       index=False)
+    to_export[['drug_type',
+                'imaging_plate_drug_concentration',
+                'well_name',
+                'imgstore_name',
+                'date_yyyymmdd', ]].to_csv(METADATA_FNAME.parent / 'control_drugs_visual_checks.csv',
+                                          index=False)
                                           
     # meta.query('20201127 in date_yyyymmdd')
 
     # meta_checks = meta.drop_duplicates(subset=['imaging_plate_id',
-    #                                            'imgstore_name'])
+    #                                             'imgstore_name'])
     meta_checks = meta[meta.well_name == 'A1']
     meta_checks = meta_checks[meta_checks.imgstore_name.notna()]
     meta_checks = meta_checks.loc[[i for i,r in meta_checks.iterrows() if 'prestim' in r.imgstore_name],:]

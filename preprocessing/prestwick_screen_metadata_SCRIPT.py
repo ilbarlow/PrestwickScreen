@@ -40,6 +40,7 @@ date_regex = r"\d{8}"
 plate_id_regex= r""
 ROOT_DIR = Path('/Volumes/behavgenom$/Ida/Data/Hydra/PrestwickScreen')
 AUX_DIR = ROOT_DIR / 'AuxiliaryFiles'
+remove_nans = False
 
 # import the shuffled plates as a reference
 SOURCEPLATES = list(AUX_DIR.rglob('*sourceplates_shuffled_FINAL_new.csv'))[0]
@@ -133,3 +134,15 @@ if __name__=='__main__':
     wells_annotated_metadata = match_wells_annotations.update_metadata(AUX_DIR,
                                                matched_videos_annoations,
                                                del_if_exists=True)
+    
+    #%% wells annotated metadata remove nans
+    
+    WELLS_METADATA = AUX_DIR / 'wells_updated_metadata.csv'
+    if remove_nans:
+        wells_annotated_metadata = pd.read_csv(WELLS_METADATA)
+        
+        wells_annotated_cleaned = wells_annotated_metadata[wells_annotated_metadata.camera_serial.notna()]
+        wells_annotated_cleaned.to_csv(AUX_DIR / 'wells_updated_metadata_nonan.csv',
+                                       index=False)
+        
+        foo = pd.read_csv(AUX_DIR / 'wells_updated_metadata_nonan.csv')
